@@ -1,6 +1,6 @@
 
 	
-
+***
 -- 1. What is the total amount each customer spent at the restaurant?
 
 '''sql
@@ -20,6 +20,7 @@ ORDER BY
  '''
 
 
+
 Results:
 
 customer_id|total_spent|
@@ -28,7 +29,7 @@ A          |         76|
 B          |         74|
 C          |         36|
 
-
+***
 
 -- 2. How many days has each customer visited the restaurant?
 
