@@ -3,6 +3,7 @@
 
 -- 1. What is the total amount each customer spent at the restaurant?
 
+'''sql
 SELECT 
 	t1.customer_id,
 	SUM(t2.price) AS total_spent
@@ -16,8 +17,8 @@ GROUP BY
 	t1.customer_id
 ORDER BY 
 	total_spent DESC;
+ '''
 
-/*
 
 Results:
 
@@ -27,10 +28,11 @@ A          |         76|
 B          |         74|
 C          |         36|
 
-*/
+
 
 -- 2. How many days has each customer visited the restaurant?
 
+'''sql
 SELECT 
 	customer_id,
 	COUNT(DISTINCT order_date) AS number_of_days
@@ -41,7 +43,7 @@ GROUP BY
 ORDER BY 
 	number_of_days DESC;
 
-/*
+'''
 
 Results:
 
@@ -55,6 +57,8 @@ C          |             2|
 
 -- 3. What was the first item from the menu purchased by each customer?
 
+
+'''sql
 WITH first_order_cte AS
 (
 	SELECT 
@@ -81,7 +85,7 @@ FROM
 WHERE
 	ranking = 1;
 
-/*
+'''
 
 Results:
 
@@ -92,10 +96,11 @@ A          |sushi       |
 B          |curry       |
 C          |ramen       |
 
-*/
+
 
 -- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
 
+'''sql
 SELECT
 	t1.product_name,
 	COUNT(t2.product_id) AS number_purchased
@@ -111,7 +116,7 @@ ORDER BY
 	number_purchased DESC
 LIMIT 1;
 
-/*
+'''
 
 Results:
 
@@ -119,10 +124,11 @@ product_name|number_purchased|
 ------------+----------------+
 ramen       |               8|
 
-*/
+
 
 -- 5. Which item was the most popular for each customer?
 
+'''sql
 WITH most_popular_item_cte AS
 (
 	SELECT 
@@ -151,7 +157,7 @@ FROM
 WHERE 
 	popularity_rank = 1;
 
-/*
+''
 
 Results:
 
@@ -163,10 +169,11 @@ B          |sushi       |               2|
 B          |ramen       |               2|
 C          |ramen       |               3|
 
-*/
+
 
 -- 6. Which item was purchased first by the customer after they became a member?
 
+'''sql
 WITH first_member_purchase_cte AS
 (
 	SELECT 
@@ -200,7 +207,7 @@ FROM
 WHERE 
 	purchase_rank = 1;
 
-/*
+'''
 
 Results:
 
@@ -209,10 +216,11 @@ customer_id|join_date |order_date|product_name|
 A          |2021-01-07|2021-01-07|curry       |
 B          |2021-01-09|2021-01-11|sushi       |
 
-*/
+
 
 -- 7. Which item was purchased just before the customer became a member?
 
+'''sql
 WITH last_nonmember_purchase_cte AS
 (
 	SELECT 
@@ -246,7 +254,7 @@ FROM
 WHERE
 	purchase_rank = 1;
 
-/*
+'''
 
 Results:
 
@@ -256,10 +264,11 @@ A          |2021-01-01|2021-01-07|sushi       |
 A          |2021-01-01|2021-01-07|curry       |
 B          |2021-01-04|2021-01-09|sushi       |
 
-*/
+
 
 -- 8. What is the total items and amount spent for each member before they became a member?
 	
+'''sql
 WITH total_nonmember_purchase_cte AS
 (
 	SELECT 
@@ -287,7 +296,7 @@ FROM
 ORDER BY 
 	customer_id;
 
-/*
+'''
 
 Results:
 
@@ -296,10 +305,11 @@ customer_id|total_products|total_spent|
 A          |             2|         25|
 B          |             3|         40|
 
-*/
+
 	
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 
+'''sql
 WITH total_customer_points_cte AS
 (
 	SELECT 
@@ -325,7 +335,7 @@ FROM
 ORDER BY
 	member_points DESC;
 
-/*
+'''
 
 Results:
 
@@ -335,11 +345,12 @@ B       |          940|
 A       |          860|
 C       |          360|
 
-*/
+
 	
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi 
 -- - how many points do customer A and B have at the end of January?	
 
+'''sql
 WITH jan_member_points_cte AS
 (
 	SELECT 
@@ -379,7 +390,7 @@ FROM
 ORDER BY
 	customer_id;
 
-/*
+'''
 
 Results:
 
@@ -388,10 +399,11 @@ customer_id|member_points|
 A          |         1370|
 B          |          820|
 
-*/
+
 
 
 -- 11. Recreate the following table output using the available data:
+
 
 customer_id	order_date	product_name	price	member
 A			2021-01-01	curry			15		N
@@ -410,6 +422,7 @@ C			2021-01-01	ramen			12		N
 C			2021-01-01	ramen			12		N
 C			2021-01-07	ramen			12		N
 
+'''sql
 DROP TABLE IF EXISTS join_all_things;
 CREATE TABLE join_all_things AS 
 (
@@ -440,8 +453,7 @@ FROM
 	join_all_things
 ORDER BY
 	customer_id, order_date, product_name;
-
-/*
+'''
 
 Results:
 
@@ -463,11 +475,12 @@ C          |2021-01-01|ramen       |    12|N     |
 C          |2021-01-01|ramen       |    12|N     |
 C          |2021-01-07|ramen       |    12|N     |
 
-*/
+
 
 -- 12. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking 
 --     for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
 
+'''sql
 SELECT 
 	*,
 	CASE
@@ -482,7 +495,7 @@ FROM
 ORDER BY
 	customer_id, order_date, product_name;
 
-/*
+'''
 
 Results:
 
@@ -504,7 +517,7 @@ C          |2021-01-01|ramen       |    12|N     | [NULL]|
 C          |2021-01-01|ramen       |    12|N     | [NULL]|
 C          |2021-01-07|ramen       |    12|N     | [NULL]|
 
-*/
+
 
 
 
